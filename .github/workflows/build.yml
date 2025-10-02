@@ -33,7 +33,7 @@ jobs:
         run: ls -R project/build/libs || true
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mob-behavior-tool-jar
           path: project/build/libs/*.jar

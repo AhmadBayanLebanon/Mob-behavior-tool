@@ -1,0 +1,39 @@
+name: Build Fabric Mod (from uploaded project zip)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Unzip uploaded project
+        run: unzip mob-behavior-tool.zip -d project
+
+      - name: List files
+        run: ls -R project | sed -n '1,200p'
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build with Gradle (uses Gradle Action to install Gradle)
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: '9.1.0'
+          arguments: 'build'
+          working-directory: project
+
+      - name: Show build output
+        run: ls -R project/build/libs || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mob-behavior-tool-jar
+          path: project/build/libs/*.jar
